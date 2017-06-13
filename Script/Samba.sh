@@ -138,6 +138,10 @@ configuration_utilisateur(){
 			termine=1
 		fi
 	done
+	useradd recalbox -p recalboxroot
+	mkdir /home/recalbox
+	usermod -g samba recalbox
+	smbpasswd -a recalbox recalboxroot
 	echo "Fini configuration_utilisateur"
 }
 
@@ -161,7 +165,7 @@ installation_samba(){
 	echo 'server string = "Samba"'>>  /etc/samba/smb.conf
 	echo 'security = user'>> /etc/samba/smb.conf
 	echo ''>> /etc/samba/smb.conf
-	echo '[Vidéothèque]'>> /etc/samba/smb.conf
+	echo '[Videotheque]'>> /etc/samba/smb.conf
 	echo 'comment = Vidéothèque'>> /etc/samba/smb.conf 
 	echo 'path = "/media/DD1/Videotheque"'>> /etc/samba/smb.conf
 	echo 'browseable = yes'>> /etc/samba/smb.conf
@@ -227,6 +231,7 @@ creation_utilisateur(){
 		exit 1
 	fi
 	useradd $login -p $password
+	mkdir /home/$login
 	usermod -g samba $login
 	smbpasswd -a $login $password
 	(echo $password; echo $password ) | smbpasswd -s -a $login
