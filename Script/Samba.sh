@@ -33,7 +33,7 @@ selectDisk(){
 		done
 		#On insére les informations sur un affichage 
 		#On demande de choisir
-		choix=$(whiptail --clear --title "Checklist Box" --checklist "Ques disque dur voulez-vous utiliser ? (MAX : 2)" 15 60 4 $text 3>&1 1>&2 2>&3)
+		choix=$(whiptail --clear --title "Checklist Box" --checklist "Quels disque dur voulez-vous utiliser ? (MAX : 2)\nPour selectionner un disque, appuyer sur ESPACE, PUIS sur ENTREE quand vous avez fini de choisir." 15 60 4 $text 3>&1 1>&2 2>&3)
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
 			IFS=' ' read -r -a listdisques <<< "$choix"
