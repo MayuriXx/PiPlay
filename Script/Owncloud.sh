@@ -62,6 +62,7 @@ verifFichier(){
         	touch .htaccess
         	chown www-data:www-data .htaccess
 	fi
+	service apache2 restart
 	a2enmod rewrite
 	a2enmod headers
 
@@ -75,9 +76,11 @@ copieVersDD(){
 	echo "Arrêt d'apache2"
 	cd /media/DD1/
 	mkdir /media/DD1/Owncloud/
-	sudo mv /var/www/html/owncloud/data /media/DD1/Owncloud/data
+	mkdir /media/DD1/Owncloud/config
+	mkdir /media/DD1/Owncloud/data
+	#sudo mv /var/www/html/owncloud/data /media/DD1/Owncloud/data
 	sudo ln -s /media/DD1/Owncloud/data /var/www/html/owncloud/data
-	sudo mv /var/www/html/owncloud/config /media/DD1/Owncloud/config
+	#sudo mv /var/www/html/owncloud/config /media/DD1/Owncloud/config
 	sudo ln -s /media/DD1/Owncloud/config /var/www/html/owncloud/config
 	sudo chown -R www-data:www-data /media/DD1/Owncloud
 
