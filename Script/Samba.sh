@@ -3,7 +3,7 @@
 #Script Installation Samba
 
 utilisateur_principale=""
-disques=""
+disques=('sdb1' 'sda1')
 
 #Vérifie que l'utilisateur est en root
 verifierRoot(){
@@ -33,9 +33,9 @@ selectDisk(){
 		done
 		#On insére les informations sur un affichage 
 		#On demande de choisir
-		choix=$(whiptail --clear --title "Checklist Box" --checklist "Quels disque dur voulez-vous utiliser ? (MAX : 2)\nPour selectionner un disque, appuyer sur ESPACE, PUIS sur ENTREE quand vous avez fini de choisir." 15 60 4 $text 3>&1 1>&2 2>&3)
+		choix=$(whiptail --clear --title "Checklist Box" --checklist "Quels disque dur voulez-vous utiliser ? (MAX : 2)\nPour selectionner un disque, appuyer sur ESPACE, puis sur ENTREE quand vous avez fini de choisir." 15 60 4 $text 3>&1 1>&2 2>&3)
 		exitstatus=$?
-		if [ $exitstatus = 0 ]; then
+		if [[ $exitstatus == 0 ]]; then
 			IFS=' ' read -r -a listdisques <<< "$choix"
 			if [[ $choix == "" ]]; then
 				echo "Vous n'avez pas sélectionné de Disque dur. L'installation s'arrête !"
@@ -48,8 +48,7 @@ selectDisk(){
 			echo "L'installation est annulé !"
 			exit 1
 		fi
-		
-		disques=$listdisques
+		disques= ${listdisques[@]}
 		
 	else
 		echo "Aucun disque dur de branché, Veuillez brancher un disque dur et relancer le script"
@@ -59,12 +58,24 @@ selectDisk(){
 
 #On configure les diques durs
 configuration_dd(){
-	listDD=$1
-	nbDD=${#listDD[@]}
+	listDD=${disques[@]}
+	nbDD=${#disques[@]}
+	echo "nombre de disque $nbDD ${listDD[0]} ${listDD[1]}"
+	if [[ $nbDD > 1 ]]; then
+		size1=`df -h | awk '/'${disques[0]}'/ {print $2}' | cut -d 'G' -f 1`
+		size2=`df -h | awk '/'${disques[1]}'/ {print $2}' | cut -d 'G' -f 1`
+		let s1=$size1
+		let s2=$size2
+		if [[ $s2 > $s1 ]]; then
+			listDD=(${disques[1]} ${disques[0]})
+		else
+			listDD=(${disques[0]} ${disques[1]})
+		fi
+	fi
 	if [ ! -d "/media/DD1" ]; then
 		mkdir /media/DD1
 	fi
-	dd1=$(echo ${listDD[0]} | awk -F'"' '{print $2}')
+	dd1=${listDD[0]}
 	
 	#On demonte le disque dur
 	umount /dev/"$dd1"
@@ -80,21 +91,12 @@ configuration_dd(){
 	if [ ! -d "/media/DD1/Videotheque" ]; then
 		mkdir /media/DD1/Videotheque
 	fi
-	if [ ! -d "/media/DD1/Videotheque/Films" ]; then
-		mkdir /media/DD1/Videotheque/Films
-	fi
-	if [ ! -d "/media/DD1/Videotheque/Sèries" ]; then
-		mkdir /media/DD1/Videotheque/Sèries
-	fi
-	if [ ! -d "/media/DD1/Videotheque/Animes" ]; then
-		mkdir /media/DD1/Videotheque/Animes
-	fi
 	
 	if [[ $nbDD > 1 ]]; then
 		if [ ! -d "/media/DD2" ]; then
 			mkdir /media/DD2
 		fi
-		dd2=$(echo ${listDD[1]} | awk -F'"' '{print $2}')
+		dd2=${listDD[1]}
 		umount /dev/"$dd2"
 		mount -t auto /dev/"$dd2" /media/DD2
 		verifie_format_disque $dd2
@@ -209,7 +211,7 @@ verifie_format_disque(){
 creation_utilisateur(){
 	login=$(whiptail --inputbox "Donner un nom d'utilisateur :" 8 78 --title "Création d'un utilisateur" 3>&1 1>&2 2>&3)
 	exitstatus=$?
-	if [ $exitstatus = 0 ]; then
+	if [ $exitstatus == 0 ]; then
 		if [[ $login == "" ]]; then
 			echo "ERREUR : Le nom d'utilisateur ne peut pas être vide !"
 			exit 1
@@ -221,7 +223,7 @@ creation_utilisateur(){
 	
 	password=$(whiptail --passwordbox "Donner un mot de passe pour l'utilsateur $login :" 8 78 --title "Création d'un utilisateur" 3>&1 1>&2 2>&3)
 	exitstatus=$?
-	if [ $exitstatus = 0 ]; then
+	if [ $exitstatus == 0 ]; then
 		if [[ $password == "" ]]; then
 			echo "ERREUR : Le mot de passe de l'utilisateur $login ne peut pas être vide !"
 			exit 1
@@ -255,7 +257,7 @@ configuration_utilisateur
 #On sélectionne le ou les disque durs voulu
 selectDisk
 #On configures les diques durs
-configuration_dd $disques
+configuration_dd 
 #On installe notre système sambapour la vidéothèque
 installation_samba $disques $utilisateur_principale
 
