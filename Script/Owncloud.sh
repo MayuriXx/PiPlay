@@ -83,6 +83,8 @@ copieVersDD(){
 	#sudo mv /var/www/html/owncloud/config /media/DD1/Owncloud/config
 	sudo ln -s /media/DD1/Owncloud/config /var/www/html/owncloud/config
 	sudo chown -R www-data:www-data /media/DD1/Owncloud
+	sudo chown -R www-data:www-data /var/www/html/owncloud/data 
+	sudo chown -R www-data:www-data /var/www/html/owncloud/config 
 
 }
 

@@ -621,13 +621,13 @@ update_repo() {
 setCustomProto() {
   # Set the available protocols into an array so it can be used with a whiptail dialog
   if protocol=$(whiptail --title "Protocol" --radiolist \
-  "Choose a protocol. Please only choose TCP if you know why you need TCP." ${r} ${c} 2 \
+  "Choisissez un protocole. S'il vous plaît, choisissez simplement TCP si vous savez pourquoi vous avez besoin de TCP." ${r} ${c} 2 \
   "UDP" "" ON \
   "TCP" "" OFF 3>&1 1>&2 2>&3)
   then
       # Convert option into lowercase (UDP->udp)
       pivpnProto="${protocol,,}"
-      echo "::: Using protocol: $pivpnProto"
+      echo "::: Utilisation du protocole: $pivpnProto"
       echo "${pivpnProto}" > /tmp/pivpnPROTO
   else
       echo "::: Annuler sélectionné, sortir...."
@@ -650,7 +650,7 @@ setCustomPort() {
             else
               DEFAULT_PORT=443
             fi
-            if PORT=$(whiptail --title "Default OpenVPN Port" --inputbox "You can modify the default OpenVPN port. \nEnter a new value or hit 'Enter' to retain the default" ${r} ${c} $DEFAULT_PORT 3>&1 1>&2 2>&3)
+            if PORT=$(whiptail --title "Port OpenVPN par défaut" --inputbox "Vous pouvez modifier le port OpenVPN par défaut. \nEntrez une nouvelle valeur ou appuyez sur 'Entree' pour conserver le port par défaut" ${r} ${c} $DEFAULT_PORT 3>&1 1>&2 2>&3)
             then
                 if [[ "$PORT" =~ ^[0-9]+$ ]] && [ "$PORT" -ge 1 ] && [ "$PORT" -le 65535 ]; then
                     :
