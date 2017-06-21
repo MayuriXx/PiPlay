@@ -153,11 +153,11 @@ installation_samba(){
 	nbDD=${#listDD[@]}
 	
 	chown -R $2:samba "/media/DD1" 
-	chmod -R 750 "/media/DD1"
+	chmod -R 755 "/media/DD1"
 	
 	if [[ $nbDD > 1 ]]; then
 		chown -R $2:samba "/media/DD2" 
-		chmod -R 750 "/media/DD2"
+		chmod -R 755 "/media/DD2"
 	fi
 	
 	#On modifie le fichier smb.conf
