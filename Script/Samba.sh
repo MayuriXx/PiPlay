@@ -3,7 +3,7 @@
 #Script Installation Samba
 
 utilisateur_principale=""
-disques=('sdb1' 'sda1')
+disques=""
 
 #Vérifie que l'utilisateur est en root
 verifierRoot(){
