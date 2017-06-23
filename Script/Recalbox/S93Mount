@@ -1,10 +1,10 @@
-*#!/bin/bash
+#!/bin/sh
 
 # Script montage Recalbox
 
-ip_serveur="192.168.1.45"
-user="eric"
-password="eric"
+ip_serveur="a_changer_par_ip_serveur"
+user="a_changer_par_user"
+password="a_changer_par_password"
 
 function start(){
 	ping $ip_serveur -c5 -q
@@ -18,7 +18,7 @@ function start(){
 		while read line  
 		do   
 			if [ -d "/recalbox/share/roms/$line" ]; then
-				ln -s /media/samba/$line /recalbox/share/roms/$line/distant
+				ln -s /media/samba/$line/ /recalbox/share/roms/$line/distant
 			fi
 		done < consoles.txt
 	else
